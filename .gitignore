@@ -8,3 +8,5 @@
 .hugo_build.lock
 */solution/
 .vscode/
+public/
+resources/
