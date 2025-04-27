@@ -1,0 +1,10 @@
+*/public/
+*/resources/
+*/workbook/
+*/.vscode/
+*/.idea/
+.hugo.build.json
+.hugo.build.lock
+.hugo_build.lock
+*/solution/
+.vscode/

@@ -1,0 +1,23 @@
+baseURL = ""
+languageCode = "en-us"
+title = "Portfolio 4: Make Your Own Portfolio"
+theme = ["Workbook"]
+disableKinds = ["taxonomy","RSS","sitemap"]
+relativeURLs = true
+enableEmoji = true
+
+# static mounts not needed for separate portfolio
+
+[Params]
+# make sure to give the workbook a number (it's the index into the array, so N+1)
+workbook = -1
+
+[markup]
+  [markup.highlight]
+    style = "monokailight"
+    codeFences = true
+    lineNos = true
+
+[markup.goldmark.renderer]
+    unsafe= true
+
