@@ -1,0 +1,3 @@
+{{/* refer to an asset file  */}}
+{{- $file := resources.Get (.Get 0) }}
+<a href="{{$file.RelPermalink}}" class="for_students">{{- .Get 0 -}}</a>

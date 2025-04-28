@@ -1,0 +1,56 @@
+{{/* shortcode to list all of the points for a page -
+    not that it is an HTML shortcode so that it can do styling better
+    */}}
+{{- $wb := index .Site.Data.workbooks.workbook .Site.Params.workbook -}}
+
+{{/** need to use a scratch variable, not a real variable https://discourse.gohugo.io/t/counter-variables-and-template-scope/382/5 */}}
+{{ $scratch := newScratch }}
+{{- $scratch.Set "regular-points-total" 0 -}}
+{{- $scratch.Set "bonus-points-total" 0 -}}
+
+{{- range $wb.points -}}
+    {{ $scratch.Add "regular-points-total" .points }}
+{{- end -}}
+{{- range $wb.bonus -}}
+    {{ $scratch.Add "bonus-points-total" .points }}
+{{- end -}}
+
+{{ with $wb.maxbonus}}
+    {{- $scratch.Set "all-points-total" (add ($scratch.Get "regular-points-total") .) -}}
+{{ else }}
+    {{- $scratch.Set "all-points-total" (add ($scratch.Get "regular-points-total") ($scratch.Get "bonus-points-total")) -}}
+{{ end }}
+
+{{- if (eq ($scratch.Get "all-points-total") 0) -}}
+    <div>
+        <i>There are no points associated with this workbook.</i>
+    </div>
+{{- else -}}
+<div class="page-rubric-container">
+<details class="page__rubric">
+<summary>Workbook Rubric ({{ $scratch.Get "all-points-total"}} points total)</summary>
+<br/>
+<div class="page-rubric-grid">
+    {{- with $wb.points }}
+        <div class="page-rubric-grid-header rubric-box-regular">Points ({{ $scratch.Get "regular-points-total"}}):</div>
+        {{- range . -}}
+            <div class="page-rubric-grid-box rubric-box-regular">{{ if (and (isset . "box") (ne .box "none"))}}Box {{.box}}{{ else if (and (isset . "page") (ne .page "none"))}}Page {{.page}}{{end}}</div>
+            <div class="page-rubric-grid-points rubric-box-regular">{{.points}} pt</div>
+            <div class="page-rubric-grid-desc rubric-box-regular">{{.desc}}</div>
+        {{- end -}}
+    {{- end -}}
+    {{- with $wb.bonus }}
+    <div class="page-rubric-grid-header rubric-box-bonus">Advanced points (
+        {{- $scratch.Get "bonus-points-total" -}}
+        {{ with $wb.maxbonus}} possible, of which you can earn a maximum of {{ . }}{{ end -}}
+        ):</div>
+        {{- range . -}}
+            <div class="page-rubric-grid-box rubric-box-bonus">{{ if (and (isset . "box") (ne .box "none"))}}Box {{.box}}{{ else if (and (isset . "page") (ne .page "none"))}}Page {{.page}}{{end}}</div>
+            <div class="page-rubric-grid-points rubric-box-bonus">{{.points}} pt</div>
+            <div class="page-rubric-grid-desc rubric-box-bonus">{{.desc}}</div>
+        {{- end -}}
+    {{- end -}}
+</div>
+</details>
+</div>
+{{- end -}}

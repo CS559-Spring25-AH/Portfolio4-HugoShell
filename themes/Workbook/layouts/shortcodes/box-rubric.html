@@ -1,0 +1,58 @@
+{{/* shortcode to list all of the points for a page -
+    not that it is an HTML shortcode so that it can do styling better
+    */}}
+{{- $boxname := .Get 0 -}}
+{{ $pagenum := .Page.Params.page }}
+{{- $wb := index $.Site.Data.workbooks.workbook .Site.Params.workbook -}}
+
+
+{{/** need to use a scratch variable, not a real variable https://discourse.gohugo.io/t/counter-variables-and-template-scope/382/5 */}}
+{{- $scratch := newScratch }}
+{{- $scratch.Set "regular-points-total" 0 -}}
+{{- $scratch.Set "bonus-points-total" 0 -}}
+
+{{- range $wb.points -}}
+    {{- if (eq .box $boxname) -}}
+        {{ $scratch.Add "regular-points-total" .points }}
+        {{ $scratch.Add "regular-points" (slice .) }}
+    {{- end -}}
+{{- end -}}
+{{- range $wb.bonus -}}
+    {{- if (eq .box $boxname) -}}
+        {{ $scratch.Add "bonus-points-total" .points }}
+        {{ $scratch.Add "bonus-points" (slice .) }}
+    {{- end -}}
+{{- end -}}
+
+{{- $scratch.Set "all-points-total" (add ($scratch.Get "regular-points-total") ($scratch.Get "bonus-points-total")) -}}
+
+{{- if (eq ($scratch.Get "all-points-total") 0) -}}
+    <div>
+        <i>There are no points associated with this box.</i>
+    </div>
+{{- else -}}
+    <div class="page-rubric-container">
+    <details class="page__rubric">
+    <summary>Box {{ $boxname }} Rubric ({{ $scratch.Get "all-points-total"}} points total)</summary>
+    <br/>
+    <div class="page-rubric-grid">
+        {{- with $scratch.Get "regular-points"}}
+            <div class="page-rubric-grid-header rubric-box-regular">Points ({{ $scratch.Get "regular-points-total"}}):</div>
+            {{- range . -}}
+                <div class="page-rubric-grid-box rubric-box-regular">Box {{.box}}</div>
+                <div class="page-rubric-grid-points rubric-box-regular">{{.points}} pt</div>
+                <div class="page-rubric-grid-desc rubric-box-regular">{{.desc}}</div>
+            {{- end -}}
+        {{- end -}}
+        {{- with $scratch.Get "bonus-points"}}
+            <div class="page-rubric-grid-header rubric-box-bonus">Advanced points ({{ $scratch.Get "bonus-points-total"}}):</div>
+            {{- range . -}}
+                <div class="page-rubric-grid-box rubric-box-bonus">Box {{.box}}</div>
+                <div class="page-rubric-grid-points rubric-box-bonus">{{.points}} pt</div>
+                <div class="page-rubric-grid-desc rubric-box-bonus">{{.desc}}</div>
+            {{- end -}}
+        {{- end -}}
+    </div>
+    </details>
+    </div>
+{{- end -}}

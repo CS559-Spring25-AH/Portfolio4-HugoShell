@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    {{/* Hugo removes HTML comments by default */}}{{- `
+<!-- CS559 Workbook Pages - page content &copy; 2021, Michael Gleicher -->
+<!-- This page is part of a Workbook developed for the 
+    CS559 Computer Graphics Class at the University of Wisconsin
+    https://graphics.cs.wisc.edu/Courses/559-sp2025/ -->` | safeHTML }}
+    <head>
+        {{ $style := resources.Get "css/workbook.scss" | resources.ExecuteAsTemplate "css/workbook.scss" . | css.Sass -}}
+        {{- $iframefix := resources.Get "js/resizeIFrames.js" -}}
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+        <script src="{{ $iframefix.RelPermalink }}"></script>
+        {{- with .Params.mathjax -}}
+            {{- partial "mathjax.html" . }}
+        {{- end }}
+    </head>
+    <body>
+        <div class="container container--outer">    
+               {{- partial "header.html" . -}}
+                <div class="maincolumn">
+                    {{- block "main" . }}{{- end }}
+                </div>
+                {{- if not .Params.noSidebar }}
+                    {{ partial "sidebar.html" . }}
+                {{- end }}
+            {{- partial "footer.html" . -}}
+        </div>
+    </body>
+</html>

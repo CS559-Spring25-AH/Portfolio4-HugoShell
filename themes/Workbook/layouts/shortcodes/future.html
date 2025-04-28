@@ -1,0 +1,4 @@
+{{- $text := .Get 0 -}}
+<div class="workbook-future">
+    <strong>Future{{- with $text -}}:</strong><div> {{ . }}</div>{{ else }}</strong>{{end}}
+</div>

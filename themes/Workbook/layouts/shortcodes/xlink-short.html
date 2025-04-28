@@ -1,0 +1,12 @@
+{{- $text := .Get 1 -}}
+{{- with .Site.GetPage (.Get 0) -}}
+<a href="{{ .RelPermalink }}">
+    {{- with $text -}}
+        {{- . -}}
+    {{- else -}}
+        Page {{- .File.BaseFileName -}}
+    {{- end -}}
+</a>
+{{- else -}}
+{{ errorf "bad xlink %s (on %s)" (.Get 0) .Page.File }}
+{{- end -}}

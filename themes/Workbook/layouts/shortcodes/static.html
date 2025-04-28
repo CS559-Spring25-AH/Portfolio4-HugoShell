@@ -1,0 +1,8 @@
+{{/* since baseURL is not reliable, we need to do everything with a relative path, but since I don't know how to do that in Hugo, I am making a grungy hack that only works on regular workbook pages
+
+rather than {{- .Page.Site.BaseURL -}}
+we hard code in ../.. 
+
+this is fragile and wrong and assumes the current workbook architecture
+*/}}
+../../{{- .Get 0 -}}

@@ -1,0 +1,11 @@
+{{- $page := . }}
+{{- $name := .Get 0 }}
+{{- $local := .Page.Resources.GetMatch $name }}
+{{- $global := resources.GetMatch $name}}
+{{- $img := $local | default $global -}}
+{{- with $img }}
+    {{ highlight .Content "javascript" "linenos=inline" }}
+{{- else }}
+    {{ errorf "resource-img couldn't open '%s':" $name }}
+{{- end}}
+

@@ -1,0 +1,23 @@
+{{ define "main" }}
+<main class="main list" role="main">
+	{{- with .Title }}
+	<header class="main__header">
+		<h1 class="main__title">{{ . }}</h1>
+	</header>
+	{{- end }}
+	{{- with .Content }}
+	<div class="content main__content clearfix">
+		{{ . }}
+	</div>
+    {{- end }}
+    <ul>
+    {{- if eq . (.Site.GetPage "/") }}
+    <!-- The index page needs to be built as a list page, but we don't want the list... -->
+    {{else}}
+	{{- range .Pages }}
+		<li><a href="{{ .RelPermalink }}">{{ .Title | default "No Title" }}</a></li>
+    {{- end }}
+    {{- end}}
+    </ul>
+</main>
+{{ end }}

@@ -1,0 +1,13 @@
+{{- $page := . }}
+{{- $name := .Get 0 }}
+{{- $local := .Page.Resources.GetMatch $name }}
+{{- $global := resources.GetMatch $name}}
+{{- $img := $local | default $global -}}
+{{- with $img }}
+        <a href="{{ .RelPermalink }}">
+            <img src="{{ .RelPermalink }}" />
+        </a>
+{{- else }}
+    {{ errorf "resource-img couldn't open '%s':" $name }}
+{{- end}}
+

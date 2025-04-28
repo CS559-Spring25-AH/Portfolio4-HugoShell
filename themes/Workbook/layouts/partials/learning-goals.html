@@ -1,0 +1,11 @@
+
+{{- $wb := index .Site.Data.workbooks.workbook .Site.Params.workbook -}}
+{{/* use the "with" clause to make sure that we only do the section of it exists */}}
+{{- with $wb.learninggoals }}
+<h2>Learning Goals</h2>
+<ol>
+    {{- range . }}
+    <li>{{ markdownify . }}</li>
+    {{- end }}
+</ol>
+{{ end }}

@@ -1,0 +1,4 @@
+{{- $text := .Get 0 -}}
+<div class="workbook-todo">
+    <strong>TODO{{- with $text -}}:</strong><div> {{ . }}</div>{{ else }}</strong>{{end}}
+</div>

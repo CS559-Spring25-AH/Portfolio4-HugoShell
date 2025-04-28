@@ -1,0 +1,23 @@
+{{- $page := . }}
+{{- $name := .Get "src" }}
+{{- if $name }}{{- else }}{{errorf "resource-image needs a src argument" }}{{- end}}
+{{- $size := .Get "size" | default "300x300" }}
+{{- $alt := .Get "alt" | default $name }}
+{{- $class := .Get "class" | default "" }}
+{{- $local := .Page.Resources.GetMatch $name }}
+{{- $global := resources.GetMatch $name}}
+{{- $img := $local | default $global -}}
+{{- $caption := .Get "caption" }}
+{{- with $img }}
+    {{ $img := .Fit $size }}
+    <figure class="{{ $class }}">
+        <a href="{{ .RelPermalink }}">
+            <img src="{{ $img.RelPermalink }}" alt="{{ $alt }}" />
+        </a>
+        {{- with $caption -}}
+            <figcaption> {{ . | markdownify }} </figcaption>
+        {{- end }}
+    </figure>
+{{- else}}
+    {{  errorf "resource-image couldn't open '%s':" $name -}}
+{{- end}}

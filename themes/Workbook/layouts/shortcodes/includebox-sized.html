@@ -1,0 +1,10 @@
+{{- $ext := (.Get "ext") | default "html" -}}
+<iframe
+    title="{{.Get "box"}}"
+    src="/for_students/{{.Get "box"}}.{{- $ext -}}"
+    class="includebox"
+    width="{{ with .Get "width" }}{{.}}{{ else }}100%{{end}}"
+    height="{{ with .Get "height" }}{{.}}{{ else }}100%{{end}}"
+    scrolling="no"
+    frameborder="0"
+></iframe>

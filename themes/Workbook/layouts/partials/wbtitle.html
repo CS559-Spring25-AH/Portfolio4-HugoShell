@@ -1,0 +1,10 @@
+{{/* partial that makes the title of a workbook - 
+     requires that the site.workbook is set to the workbook index
+     (not the workbook number)
+    */}}
+    {{- if ge .Site.Params.Workbook 0 -}}
+        {{- $wb := index $.Site.Data.workbooks.workbook .Site.Params.workbook -}}
+        Workbook {{ $wb.number -}}: {{ $wb.name -}}
+    {{- else -}}
+        {{ .Site.Title }}
+    {{- end -}}

@@ -1,0 +1,6 @@
+{{- $anchorname := .Get 1 -}}
+{{- with .Site.GetPage (.Get 0) -}}
+<a href="{{ .RelPermalink }}{{- with $anchorname -}}#{{- anchorize $anchorname -}}{{- end -}}">Page &nbsp; {{- .File.BaseFileName -}} &nbsp; ({{- .Page.Title -}}{{- with $anchorname -}}:{{- $anchorname -}}{{- end -}})</a>
+{{- else -}}
+{{ errorf "bad alink %s (on %s)" (.Get 0) .Page.File }}
+{{- end -}}

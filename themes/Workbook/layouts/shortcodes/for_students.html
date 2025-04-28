@@ -1,0 +1,16 @@
+{{/* refer to a for_students file - even if it is in assets
+    <a href="{{.Page.Site.BaseURL}}/{{$name}}"  class="for_students for_students--notfile"></a>
+*/}}
+{{- $name := printf "for_students/%s" (.Get 0)}}
+{{- $file := resources.Get $name }}
+{{- if $file }}
+    <a href="{{$file.RelPermalink}}" class="for_students for_students--file">
+{{- else }}
+    {{/* WARNING! I am hard coding the path here! */}}
+    <a href="../../{{$name}}" class="for_students for_students--notfile">
+{{- end}}
+{{- if (.Get 1) -}}
+    {{- .Get 1 -}}
+{{- else -}}
+    {{- .Get 0 -}}
+{{- end -}}</a>

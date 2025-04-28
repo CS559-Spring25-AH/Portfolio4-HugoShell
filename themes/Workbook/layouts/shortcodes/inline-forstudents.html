@@ -1,0 +1,44 @@
+{{- $name := (.Get "name") | default (.Get "file") -}}
+{{- $fname := (printf "/static/for_students/%s" $name) -}}
+
+{{- $code := (readFile $fname) -}}
+{{- $snippet := (.Get "snippet") -}}
+{{- $lang := (.Get "lang") | default "javascript" -}}
+ 
+
+{{- if $snippet -}}
+    {{/* Extract a snippet from the lines between "@Snippet:{id}" and "@Snippet:end" */}}
+    
+    {{/*
+        NOTE: changes to the JS file may not correctly propagate to the page when running `hugo serve`.
+        
+        This is a known issue with Hugo: https://github.com/gohugoio/hugo/issues/6177
+        
+        To see the changes, just make a trivial modification to the page in order to force it to re-render.
+    */}}
+    
+    {{- $pattern := (printf "@@Snippet:%s(.|\n)+?@@Snippet:end" $snippet) -}}
+    {{- $excerpt := index (findRE $pattern $code 1) 0 -}}
+    {{- $lines := split $excerpt "\n" -}}
+    {{- $lines := first (sub (len $lines) 2) (after 1 $lines) -}}
+    {{- with (.Get "lines") -}}
+        {{- $lines = first . $lines -}}
+    {{- end -}}
+    {{- $excerpt := delimit $lines "\n" -}}
+    
+    {{- $prepattern := (printf "(.|\n)+@@Snippet:%s" $snippet) -}}
+    {{- $pre := index (findRE $prepattern $code 1) 0 -}}
+    {{- $firstline := (add 1 (len (split $pre "\n"))) -}}
+    
+    {{ highlight $excerpt $lang (printf "lineos=table,linenostart=%d" $firstline)}}
+    
+{{- else -}}
+    {{/* Extract an excerpt based on line numbers */}}
+
+    {{- $lines := split $code "\n" -}}
+    {{- $firstline := (int ((.Get "first") | default 1)) | default 1 -}}
+    {{- $lines := after (add -1 $firstline) $lines -}}
+    {{- $lines := first ((.Get "lines") | default 10) $lines}}
+    {{- $code := delimit $lines "\n" -}}
+    {{ highlight $code $lang (printf "linenos=table,linenostart=%d" $firstline) }}
+{{- end -}}

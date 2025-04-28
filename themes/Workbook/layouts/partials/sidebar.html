@@ -1,0 +1,22 @@
+<div class="sidebar">
+{{- $dot := . -}}
+{{- $index := .Site.GetPage "/" -}}
+{{- $indexTitle := $index.Title }}
+<h2 class="Side_Title">{{ partial "wbtitle" . }}</h2>
+<p class="Side__Note">Pages:</p>
+<ul class="Side__List">
+    {{- if (eq $dot $index) }}
+    <li class="Side__Item Side__Selected">Index {{ with $indexTitle }}({{$indexTitle}}){{end}} </li>
+    {{- else }}
+    <li class="Side__Item Side__Unselected"><a href="{{  $index.RelPermalink }}">Index {{ with $indexTitle }}({{$indexTitle}}){{end}}</a></li>
+    {{- end }}
+    {{- range (where .Site.RegularPages "Section" "docs") }}
+        {{- $title := .Page.Title | default (.File.BaseFileName | humanize)}}
+        {{- if (eq $dot .) }}
+        <li class="Side__Item Side__Selected"> {{ .File.BaseFileName -}} {{ with $title }}: {{ $title }} {{end}}</li>
+        {{- else }}
+        <li class="Side__Item Side__Unselected"> <a href="{{ .RelPermalink }}">{{ .File.BaseFileName -}} {{ with $title }}: {{ $title }} {{end}}</a></li>
+        {{- end }}
+    {{- end }}
+</ul>
+</div>

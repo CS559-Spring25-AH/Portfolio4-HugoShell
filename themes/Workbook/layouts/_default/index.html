@@ -1,0 +1,60 @@
+{{ define "main" }}
+<!-- Workbook index page! -->
+{{/** we will access the workbook a lot! make sure it is set **/}}
+{{/** Note: Hugo seems toally happy fetching index - 1 - we just never use it */}}
+{{- $wb := index $.Site.Data.workbooks.workbook .Site.Params.workbook -}}
+{{- $root := . -}}
+<main class="main list" role="main">
+	<header class="main__header">
+		<h1 class="main__title">{{ partial "wbtitle" . }}</h1>
+	</header>
+	{{- with .Content }}
+	<div class="content main__content clearfix">
+        {{/* a lot of the sections are generated programmatically */}}
+
+        {{/* if this isn't a regular (number >= 0) workbook, don't do special stuff */}}
+        {{- if ge $.Site.Params.workbook 0 -}}
+            {{- with $wb.brief }}
+            <p>{{ markdownify . }}</p>
+            {{- end }}
+            {{- if isset $.Site.Params "solution" -}}
+            <div class="dimbox">
+                <h2>CS559 Spring 2023 Sample Solution</h2>
+                <p>This is a sample solution for the Workbook.
+                    You are welcome to refer to it to learn one way to do the assignment
+                    but only after you have turned in your own assignment
+                </p>
+            </div>
+            {{- else -}}
+            <p>This workbook is due on {{ $wb.due| time.Format "Monday, January 2, 2006" }}.</p>
+            {{- end -}}
+            {{- if (not $.Page.Params.skip_learning_goals) -}}
+                {{ partial "learning-goals.html" $root}}
+            {{end}}
+        {{- end -}}
+
+        {{ . }}
+        
+        {{/* no rubric for "non-workbook" workbooks */}}
+        {{- if and (ge $.Site.Params.workbook 0) (not $.Page.Params.skip_rubric) -}}
+            <h2>Rubric</h2>
+            {{ partial "index-rubric.html" $root }}
+        {{ end }}
+        
+        <!-- While I dislike building this in, it needs to go after the rubric -->
+        <h3 class="get__started">
+        {{- with $.Site.GetPage "1" -}}
+            Get started on 
+            <a href="{{ .RelPermalink }}">Page &nbsp; {{- .File.BaseFileName -}} &nbsp; ({{- .Page.Title -}})</a>!
+        {{- end -}}
+        </h3>
+        {{/* I have decided not to include the visible copyright
+        <details>
+            <summary>CS559 Workbooks &copy; 2021, Michael Gleicher</summary>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
+        </details>
+        */}}
+	</div>
+    {{- end }}
+</main>
+{{ end }}

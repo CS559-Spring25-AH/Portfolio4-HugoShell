@@ -1,0 +1,38 @@
+{{ define "main" }}
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+            {{- if .Params.page -}}
+            <h1 class="post__title">Page {{.Params.page}}: {{ .Title }}</h1>
+            {{- else -}}
+            {{ errorf "Page number not set for %s" .File.Path}}
+            {{- end -}}
+			{{- with .Params.lead }}
+			<p class="post__lead">{{ . }}</p>
+			{{- end }}
+		</header>
+		{{- if .Params.thumbnail }}
+		<figure class="post__thumbnail">
+			<img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}">
+		</figure>
+        {{- end }}
+        
+        
+        
+		<div class="content post__content clearfix">
+            {{- if isset $.Site.Params "solution" -}}
+                <div class="dimbox">
+                    <h3>CS559 Spring 2023 Sample Solution</h3>
+                </div>
+            {{- end -}}
+            {{ .Content }}
+            {{/* Put the rubric at the bottom of the page */}}
+        
+			{{- if and (ge $.Site.Params.workbook 0) (not $.Page.Params.skip_rubric) -}}
+            	{{ partial "page-rubric.html" . }}
+			{{ end }}
+			
+		</div>
+	</article>
+</main>
+{{ end }}

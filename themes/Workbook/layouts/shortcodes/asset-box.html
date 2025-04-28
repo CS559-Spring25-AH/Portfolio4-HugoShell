@@ -1,0 +1,13 @@
+{{- $html := resources.Get (printf "%s.html" (.Get 0)) -}}
+{{/* {{- I never really got externals to work :-( */}}
+{{- $js := resources.Get (printf "%s.js" (.Get 0)) | js.Build -}}
+<iframe
+    title="{{.Get 0}}"
+    src="{{ $html.RelPermalink }}"
+    js = "{{ $js.RelPermalink }}"
+    class="includebox includebox-standard"
+    width="100%"
+    height="100%"
+    scrolling="no"
+    frameborder="0"
+></iframe>
